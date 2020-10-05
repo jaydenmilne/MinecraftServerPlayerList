@@ -8,6 +8,7 @@ import sys
 import datetime
 import cgi
 
+
 class Player:
     def __init__(self, uuid, last_modified):
         self.uuid = uuid
@@ -15,7 +16,9 @@ class Player:
         self.username = None
 
     def get_last_modified_date(self):
-        return datetime.datetime.fromtimestamp(self.last_modified).strftime("%a %b %d %Y, %I:%M %p")
+        return datetime.datetime.fromtimestamp(self.last_modified).strftime(
+            "%a %b %d %Y, %I:%M %p"
+        )
 
     def get_username(self):
         if self.username is not None:
@@ -90,21 +93,25 @@ def write_html_output(out, players, servername):
     """
     Writes a basic HTML representation of the output to stdout
     """
-    header = f"<html><head><title>{servername} players</title></head><body><h1>Players on {servername}</h1>"
+    header = f"<html><head><title>{servername} players</title><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body><h1>Players on {servername}</h1>"
     print(header, file=out)
     print("<table><tr><th>Player</th><th>Last Seen</th></tr>", file=out)
 
     for p in players:
-        print(f"<tr><td>{cgi.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>", file=out)
+        print(
+            f"<tr><td>{cgi.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>",
+            file=out,
+        )
 
     print("</table></body></html>", file=out)
+
 
 def main(worldpath, out, html, n, servername):
     players = get_players(worldpath)
 
     if n != -1:
-        players = players[:int(n)]
-    
+        players = players[: int(n)]
+
     if out is None:
         f = sys.stdout
     else:
@@ -139,7 +146,10 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
-        "-n", required=False, help="Only return the last n usernames, default all", default=-1
+        "-n",
+        required=False,
+        help="Only return the last n usernames, default all",
+        default=-1,
     )
     parser.add_argument(
         "--servername",

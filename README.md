@@ -32,29 +32,29 @@ optional arguments:
 
 ### Plain Text
 ```console
-$ python3 playerlist.py  /opt/mc/all_biomes
-Players last seen on Big Daddy
+$ python3 playerlist.py  /opt/mc/world
+Players last seen on Server
 =============================================
-        CforJohn    Mon Oct 05 2020, 02:53 PM
-       roguenerd    Mon Oct 05 2020, 02:12 PM
-    AmberAlert03    Sun Oct 04 2020, 08:30 PM
-           _Ro1_    Thu Sep 24 2020, 08:38 PM
-        alpal923    Sun Sep 20 2020, 07:58 PM
-  TangoTangoMike    Wed Aug 05 2020, 09:42 PM
-       LiamLopey    Wed Aug 05 2020, 09:33 PM
-     iiridescent    Fri Jul 24 2020, 09:47 PM
-           vvvin    Fri Jul 24 2020, 09:47 PM
-communistdictatr    Sun Jun 14 2020, 11:12 PM
-        Entrippy    Tue Jun 09 2020, 08:47 PM
-     Twinkislaya    Sat Jun 06 2020, 10:34 PM
-        KolbyWan    Tue Jun 02 2020, 11:53 PM
-        Terrefeu    Tue Jun 02 2020, 02:22 PM
-          kesnow    Sat May 23 2020, 12:15 AM
-           mule0    Mon May 18 2020, 11:04 PM
-          zbrogz    Mon May 18 2020, 10:06 PM
-   laxmanisbeast    Fri May 15 2020, 06:41 PM
-      Lupineeyes    Sat Apr 11 2020, 04:14 PM
+             Bob    Mon Oct 05 2020, 02:53 PM
+             Dan    Mon Oct 05 2020, 02:12 PM
+          George    Sun Oct 04 2020, 08:30 PM
 ```
 
 ### HTML
-https://bigdaddy.cf/map/players/
+
+```html
+<html>
+  <head>
+    <title>Server players</title>
+  </head>
+  <body>
+    <h1>Players on Server</h1>
+    <table><tbody>
+      <tr><th>Player</th><th>Last Seen</th></tr>
+      <tr><td>Bob</td><td>Mon Oct 05 2020, 02:53 PM</td></tr>
+      <tr><td>Dan</td><td>Mon Oct 05 2020, 02:12 PM</td></tr>
+      <tr><td>George</td><td>Sun Oct 04 2020, 08:30 PM</td></tr>
+      </tbody></table>
+  </body>
+</html>
+```

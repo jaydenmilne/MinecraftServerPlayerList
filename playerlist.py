@@ -77,31 +77,36 @@ def write_text_output(out, players, servername):
 
     longest = get_max_player_name_length(players)
 
-    max_row_len = longest + 4 + len("Mon Oct 05 2020, 02:33 PM")
+    max_row_len = 4 + longest + 4 + len("Mon Oct 05 2020, 02:33 PM")
     print("=" * max(len(header), max_row_len), file=out)
 
+    count = 1
     for p in players:
         print(
-            f"{{:>{longest}}}    {{}}".format(
-                p.get_username(), p.get_last_modified_date()
+            f"{{:<3}} {{:>{longest}}}    {{}}".format(
+                count, p.get_username(), p.get_last_modified_date()
             ),
             file=out,
         )
+        count += 1
 
 
 def write_html_output(out, players, servername):
     """
     Writes a basic HTML representation of the output to stdout
     """
-    header = f"<html><head><title>{servername} players</title><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body><h1>Players on {servername}</h1>"
+    header = f"<html><head><!-- generated with github.com/jaydenmilne/minecraft-server-player-list -->"
+    header += f"<title>{servername} players</title><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body><h1>Players on {servername}</h1>"
     print(header, file=out)
-    print("<table><tr><th>Player</th><th>Last Seen</th></tr>", file=out)
+    print("<table><tr><th>Place</th><th>Player</th><th>Last Seen</th></tr>", file=out)
 
+    count = 1
     for p in players:
         print(
-            f"<tr><td>{cgi.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>",
+            f"<tr><td>{count}<td>{cgi.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>",
             file=out,
         )
+        count += 1
 
     print("</table></body></html>", file=out)
 

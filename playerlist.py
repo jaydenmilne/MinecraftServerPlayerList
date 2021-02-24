@@ -25,7 +25,7 @@ class Player:
             return self.username
 
         if self.uuid.startswith("00000000-0000-0000-000"):
-            self.username = "Bedrock Player"
+            self.username = "(Bedrock/Geyser Player)"
             return self.username
 
         # perform request

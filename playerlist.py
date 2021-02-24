@@ -24,6 +24,10 @@ class Player:
         if self.username is not None:
             return self.username
 
+        if self.uuid.startswith("00000000-0000-0000-000"):
+            self.username = "Bedrock Player"
+            return self.username
+
         # perform request
         conn = http.client.HTTPSConnection("api.mojang.com")
 

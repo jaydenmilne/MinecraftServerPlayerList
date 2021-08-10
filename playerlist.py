@@ -6,7 +6,7 @@ import glob
 import os
 import sys
 import datetime
-import cgi
+import html
 
 
 class Player:
@@ -107,7 +107,7 @@ def write_html_output(out, players, servername):
     count = 1
     for p in players:
         print(
-            f"<tr><td>{count}<td>{cgi.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>",
+            f"<tr><td>{count}<td>{html.escape(p.get_username())}</td><td>{p.get_last_modified_date()}</td></tr>",
             file=out,
         )
         count += 1

@@ -246,7 +246,7 @@ def entry():
     )
 
     args = parser.parse_args()
-    main(args.worldpath, args.out, args.cache, args.html, args.n, args.servername)
+    main(args.worldpath, args.out, args.cache_file, args.html, args.n, args.servername)
 
 
 if __name__ == "__main__":

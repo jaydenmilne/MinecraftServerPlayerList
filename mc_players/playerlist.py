@@ -68,7 +68,7 @@ def get_max_player_name_length(players: List[Player]):
     return max(len(p["username"]) for p in players)
 
 
-def get_player_uuids(worldpath: str) -> List[tuple[str, float]]:
+def get_player_uuids(worldpath: str) -> List[Tuple[str, float]]:
     """
     Returns a list of players, sorted from most recent to last
     """

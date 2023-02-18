@@ -37,7 +37,7 @@ def lookup_username(uuid: str) -> str:
 
     # perform request
     uuid_mangled = uuid.replace("-", "")
-    r = request.Request(f"https://api.mojang.com/user/profiles/{uuid_mangled}")
+    r = request.Request(f"https://api.mojang.com/user/profile/{uuid_mangled}")
 
     try:
         resp = request.urlopen(r)

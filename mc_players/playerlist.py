@@ -208,7 +208,7 @@ def main(
             players.append(
                 {
                     "uuid": uuid,
-                    "username": uuid,
+                    "username": username,
                     "last_looked_up": datetime.datetime.now().timestamp(),
                     "last_modified_date": mtime,
                 }

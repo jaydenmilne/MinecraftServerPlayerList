@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mc-players"
-version = "2.1.0"
+version = "2.1.1"
 description = "List the player usernames that have signed to a Minecraft server lately"
 authors = ["Jayden Milne <jaydenmilne@users.noreply.github.com>"]
 readme = "README.md"

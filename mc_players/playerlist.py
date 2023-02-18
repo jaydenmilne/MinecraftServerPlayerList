@@ -246,8 +246,8 @@ def entry():
     )
     parser.add_argument(
         "--cache-expiry",
-        type=str,
-        help="Look up usernames that haven't been looked up in n seconds",
+        type=int,
+        help="Look up usernames that haven't been looked up in n seconds, default 120",
         required=False,
         default=120,
     )

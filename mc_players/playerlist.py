@@ -10,7 +10,7 @@ import glob
 import os
 import sys
 import datetime
-from typing import TypedDict
+from typing import TypedDict, List, Dict, Tuple
 
 
 class Player(TypedDict):
@@ -64,17 +64,17 @@ def player_can_update(p: Player) -> bool:
     return (datetime.datetime.now() - last_looked_up_time).total_seconds() > 120
 
 
-def get_max_player_name_length(players: list[Player]):
+def get_max_player_name_length(players: List[Player]):
     return max(len(p["username"]) for p in players)
 
 
-def get_player_uuids(worldpath: str) -> list[tuple[str, float]]:
+def get_player_uuids(worldpath: str) -> List[tuple[str, float]]:
     """
     Returns a list of players, sorted from most recent to last
     """
     datfiles = glob.glob(f"{worldpath}/playerdata/*.dat")
 
-    players: list[tuple[str, float]] = []
+    players: List[Tuple[str, float]] = []
 
     for datfile in datfiles:
         uuid = os.path.basename(datfile).replace(".dat", "")
@@ -85,7 +85,7 @@ def get_player_uuids(worldpath: str) -> list[tuple[str, float]]:
     return players
 
 
-def write_text_output(out: TextIO, players: list[Player], servername: str):
+def write_text_output(out: TextIO, players: List[Player], servername: str):
     """
     Writes a textual representation of the output
     """
@@ -108,7 +108,7 @@ def write_text_output(out: TextIO, players: list[Player], servername: str):
         count += 1
 
 
-def write_html_output(out: TextIO, players: list[Player], servername: str):
+def write_html_output(out: TextIO, players: List[Player], servername: str):
     """
     Writes a basic HTML representation of the output to stdout
     """
@@ -128,13 +128,13 @@ def write_html_output(out: TextIO, players: list[Player], servername: str):
     print("</table></body></html>", file=out)
 
 
-def read_cache(cache_path: str) -> dict[str, Player]:
+def read_cache(cache_path: str) -> Dict[str, Player]:
     if not os.path.isfile(cache_path):
         return {}
 
     with open(cache_path, "r") as c:
         try:
-            cache: dict[str, Player] = json.load(c)
+            cache: Dict[str, Player] = json.load(c)
         except json.JSONDecodeError as e:
             print(
                 f"ERROR: failed to parse the cache at {cache_path}. You may need to delete that file and start over."
@@ -145,7 +145,7 @@ def read_cache(cache_path: str) -> dict[str, Player]:
     return cache
 
 
-def write_cache(cache_path: str, cache: dict[str, Player]):
+def write_cache(cache_path: str, cache: Dict[str, Player]):
     with open(cache_path, "w") as f:
         json.dump(cache, f)
 
@@ -163,7 +163,7 @@ def main(
     if n != -1:
         player_uuids = player_uuids[: int(n)]
 
-    players: list[Player] = []
+    players: List[Player] = []
     if cache_path is not None:
         cache = read_cache(cache_path)
 

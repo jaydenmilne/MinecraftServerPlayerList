@@ -29,8 +29,10 @@ def get_last_modified_date(p: Player):
 def is_bedrock_player(uuid: str) -> bool:
     return uuid.startswith("00000000-0000-0000-000")
 
+
 class RateLimitedException(Exception):
     pass
+
 
 def lookup_username(uuid: str) -> str:
     """Hit the mojang API to get the username for the given UUID"""
@@ -63,7 +65,9 @@ def player_can_update(p: Player, cache_expiry: int) -> bool:
     You can only look up a player once every minute."""
     last_looked_up_time = datetime.datetime.fromtimestamp(p["last_looked_up"])
 
-    return (datetime.datetime.now() - last_looked_up_time).total_seconds() > cache_expiry
+    return (
+        datetime.datetime.now() - last_looked_up_time
+    ).total_seconds() > cache_expiry
 
 
 def get_max_player_name_length(players: List[Player]):
@@ -178,10 +182,11 @@ def main(
                     username = uuid
                     if uuid in cache:
                         # we got rate limited - just use the cached version
-                        # don't want to update timestamp
+                        # don't want to update last fetched timestamp, just the last modified time
+                        cache[uuid]["last_modified_date"] = mtime
                         players.append(cache[uuid])
                         continue
-                    
+
                 cache[uuid] = {
                     "uuid": uuid,
                     "username": username,
@@ -270,7 +275,15 @@ def entry():
     )
 
     args = parser.parse_args()
-    main(args.worldpath, args.out, args.cache_file, args.cache_expiry, args.html, args.n, args.servername)
+    main(
+        args.worldpath,
+        args.out,
+        args.cache_file,
+        args.cache_expiry,
+        args.html,
+        args.n,
+        args.servername,
+    )
 
 
 if __name__ == "__main__":

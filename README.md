@@ -5,23 +5,30 @@ in order of who last logged in. Works by looking at the last modified time of
 their `player.dat` files in `<server root>/world/playerdata`, and resolving
 those UUIDs to a playername using Mojang's API.
 
+
+## Caching
+Optionally, you can write out the usernames to a cache file (to prevent API rate
+limiting) using the `--cache-file` option. Usernames will only be looked up 
+again after 120s.
+
 ## Usage
 
 ```
-$ python3 playerlist.py -h
-usage: playerlist.py [-h] [--out OUT] [--html] [-n N]
-                     [--servername SERVERNAME]
-                     worldpath
+$ mc_players -h
+usage: mc_players [-h] [--out OUT] [--cache-file CACHE_FILE] [--cache-expiry CACHE_EXPIRY] [--html] [-n N] [--servername SERVERNAME] worldpath
 
 Generate a list of recent players on a minecraft server.
 
 positional arguments:
-  worldpath             Path to the world folder to scan (eg
-                        <server_root>/world)
+  worldpath             Path to the world folder to scan (eg <server_root>/world)
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --out OUT             Path to output file, defaults to stdout
+  --cache-file CACHE_FILE
+                        Path to cache file (created if not exists) to prevent rate limiting
+  --cache-expiry CACHE_EXPIRY
+                        Look up usernames that haven't been looked up in n seconds
   --html
   -n N                  Only return the last n usernames, default all
   --servername SERVERNAME
@@ -47,11 +54,11 @@ Players last seen on server
 <html>
   <head>
     <!-- generated with github.com/jaydenmilne/minecraft-server-player-list -->
-    <title>Big Daddy players</title>
+    <title>server players</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   </head>
   <body>
-    <h1>Players on Big Daddy</h1>
+    <h1>Players on server</h1>
     <table>
       <tr><th>Place</th><th>Player</th><th>Last Seen</th></tr>
       <tr><td>1<td>Bob</td><td>Tue Oct 06 2020, 07:33 PM</td></tr>

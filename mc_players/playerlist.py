@@ -29,6 +29,8 @@ def get_last_modified_date(p: Player):
 def is_bedrock_player(uuid: str) -> bool:
     return uuid.startswith("00000000-0000-0000-000")
 
+class RateLimitedException(Exception):
+    pass
 
 def lookup_username(uuid: str) -> str:
     """Hit the mojang API to get the username for the given UUID"""
@@ -46,8 +48,8 @@ def lookup_username(uuid: str) -> str:
             print(f"Player `{uuid}` not found!")
             return uuid
         elif e.status == 429:
-            print(f"we got rate limited :(")
-            return uuid
+            print(f"we got rate limited. consider using a --cache-file")
+            raise RateLimitedException()
         print(f"failed to look up uuid {uuid}")
         raise e
 
@@ -55,13 +57,13 @@ def lookup_username(uuid: str) -> str:
     return body["name"]
 
 
-def player_can_update(p: Player) -> bool:
+def player_can_update(p: Player, cache_expiry: int) -> bool:
     """Check if we can hit the mojang API for the given player.
 
     You can only look up a player once every minute."""
     last_looked_up_time = datetime.datetime.fromtimestamp(p["last_looked_up"])
 
-    return (datetime.datetime.now() - last_looked_up_time).total_seconds() > 120
+    return (datetime.datetime.now() - last_looked_up_time).total_seconds() > cache_expiry
 
 
 def get_max_player_name_length(players: List[Player]):
@@ -154,6 +156,7 @@ def main(
     worldpath: str,
     out: Optional[str],
     cache_path: Optional[str],
+    cache_expiry: int,
     html: bool,
     n: int,
     servername: str,
@@ -168,11 +171,20 @@ def main(
         cache = read_cache(cache_path)
 
         for uuid, mtime in player_uuids:
-            if uuid not in cache or player_can_update(cache[uuid]):
-                # look them up again and update the cache
+            if uuid not in cache or player_can_update(cache[uuid], cache_expiry):
+                try:
+                    username = lookup_username(uuid)
+                except RateLimitedException:
+                    username = uuid
+                    if uuid in cache:
+                        # we got rate limited - just use the cached version
+                        # don't want to update timestamp
+                        players.append(cache[uuid])
+                        continue
+                    
                 cache[uuid] = {
                     "uuid": uuid,
-                    "username": lookup_username(uuid),
+                    "username": username,
                     "last_looked_up": datetime.datetime.now().timestamp(),
                     "last_modified_date": mtime,
                 }
@@ -183,10 +195,15 @@ def main(
     else:
         # lookup all the players
         for uuid, mtime in player_uuids:
+            try:
+                username = lookup_username(uuid)
+            except RateLimitedException:
+                username = uuid
+
             players.append(
                 {
                     "uuid": uuid,
-                    "username": lookup_username(uuid),
+                    "username": uuid,
                     "last_looked_up": datetime.datetime.now().timestamp(),
                     "last_modified_date": mtime,
                 }
@@ -228,6 +245,13 @@ def entry():
         default=None,
     )
     parser.add_argument(
+        "--cache-expiry",
+        type=str,
+        help="Look up usernames that haven't been looked up in n seconds",
+        required=False,
+        default=120,
+    )
+    parser.add_argument(
         "--html",
         required=False,
         action="store_true",
@@ -246,7 +270,7 @@ def entry():
     )
 
     args = parser.parse_args()
-    main(args.worldpath, args.out, args.cache_file, args.html, args.n, args.servername)
+    main(args.worldpath, args.out, args.cache_file, args.cache_expiry, args.html, args.n, args.servername)
 
 
 if __name__ == "__main__":

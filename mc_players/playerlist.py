@@ -168,7 +168,7 @@ def main(
         cache = read_cache(cache_path)
 
         for uuid, mtime in player_uuids:
-            if uuid not in cache or player_can_update(cache["uuid"]):
+            if uuid not in cache or player_can_update(cache[uuid]):
                 # look them up again and update the cache
                 cache[uuid] = {
                     "uuid": uuid,
